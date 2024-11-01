@@ -383,9 +383,10 @@ export default function PedidosData() {
 
             if (producto) {
                 pdf.text(`Producto: ${producto.titulo}`, 39, y + 3);
+                pdf.text(`${producto.estado}`, 39, y + 7);
                 pdf.text(`Precio: ${moneda} ${producto.precio}`, 39, y + 11);
                 pdf.text(`Cantidad: ${producto.cantidad}`, 39, y + 15);
-                pdf.text(`${producto.items}`, 39, y + 19);
+                pdf.text(`${producto?.items || ''}`, 39, y + 19);
             }
 
             y += 25; // Incrementar y para la siguiente posición
@@ -458,7 +459,7 @@ export default function PedidosData() {
 
                 // Agregar título, precio, cantidad
                 pdf.setFontSize(9); // Mantener el tamaño de fuente de 10 para el producto
-                const tituloTexto = `- ${producto.titulo} x${producto.cantidad} - ${moneda}${producto.precio}`;
+                const tituloTexto = `- ${producto.titulo} x${producto.cantidad} - ${moneda}${producto.precio} - ${producto.estado} `;
                 pdf.text(tituloTexto, 5, yProductos);
                 yProductos += 5;
 
@@ -557,7 +558,7 @@ export default function PedidosData() {
                     ? producto.items.join(', ')
                     : '';
 
-                const tituloTexto = `- ${producto.titulo} x${producto.cantidad} - ${moneda}${producto.precio}`;
+                const tituloTexto = `- ${producto.titulo} x${producto.cantidad} - ${moneda}${producto.precio} - ${producto.estado} `;
                 pdf.setFontSize(9);
                 pdf.text(tituloTexto, 5, yProductos);
                 yProductos += 5;

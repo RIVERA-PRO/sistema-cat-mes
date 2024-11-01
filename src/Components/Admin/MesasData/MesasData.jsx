@@ -254,7 +254,7 @@ export default function MesasData() {
                     ? producto.items.join(', ')
                     : '';
 
-                const tituloTexto = `- ${producto.titulo} x${producto.cantidad} - ${moneda}${producto.precio}`;
+                const tituloTexto = `- ${producto.titulo} x${producto.cantidad} - ${moneda}${producto.precio} - ${producto.estado} `;
                 pdf.setFontSize(9);
                 pdf.text(tituloTexto, 5, yProductos);
                 yProductos += 5;
