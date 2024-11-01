@@ -36,6 +36,9 @@ try {
         $nuevoTelefono = isset($data['nuevoTelefono']) ? $data['nuevoTelefono'] : null;
         $nuevoEmail = isset($data['nuevoEmail']) ? $data['nuevoEmail'] : null;
         $nuevoEslogan = isset($data['nuevoEslogan']) ? $data['nuevoEslogan'] : null;
+        $nuevaDireccion = isset($data['nuevaDireccion']) ? $data['nuevaDireccion'] : null;
+        $nuevoFacebook = isset($data['nuevoFacebook']) ? $data['nuevoFacebook'] : null;
+        $nuevoInstagram = isset($data['nuevoInstagram']) ? $data['nuevoInstagram'] : null;
 
         // Verificar que el ID de la tienda no esté vacío
         if (empty($idTienda)) {
@@ -48,7 +51,10 @@ try {
             nombre = :nombre, 
             telefono = :telefono, 
             email = :email,
-            eslogan = :eslogan
+            eslogan = :eslogan,
+            direccion = :direccion,
+            facebook = :facebook,
+            instagram = :instagram
         WHERE idTienda = :idTienda";
 
         $sentenciaUpdate = $conexion->prepare($sqlUpdate);
@@ -56,6 +62,9 @@ try {
         $sentenciaUpdate->bindParam(':telefono', $nuevoTelefono);
         $sentenciaUpdate->bindParam(':email', $nuevoEmail);
         $sentenciaUpdate->bindParam(':eslogan', $nuevoEslogan);
+        $sentenciaUpdate->bindParam(':direccion', $nuevaDireccion);
+        $sentenciaUpdate->bindParam(':facebook', $nuevoFacebook);
+        $sentenciaUpdate->bindParam(':instagram', $nuevoInstagram);
         $sentenciaUpdate->bindParam(':idTienda', $idTienda, PDO::PARAM_INT);
 
         // Ejecutar la consulta y verificar el resultado
