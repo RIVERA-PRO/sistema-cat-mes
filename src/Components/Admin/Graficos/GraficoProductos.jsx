@@ -74,8 +74,8 @@ export default function GraficoProductos() {
         const textColor = documentStyle.getPropertyValue('--text-color');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
-        // Generar tonalidades desde #F80050 (opaco) hasta rgba(248, 0, 80, 0.1)
-        const backgroundColors = generateColorShades('#F80050', productosFiltrados.length);
+        // Generar tonalidades desde #141618 (opaco) hasta rgba(248, 0, 80, 0.1)
+        const backgroundColors = generateColorShades('#141618', productosFiltrados.length);
 
         setChartData({
             labels: labels,
@@ -83,7 +83,7 @@ export default function GraficoProductos() {
                 label: 'Cantidad de productos vendidos',
                 data: data,
                 backgroundColor: backgroundColors, // Usar tonalidades generadas
-                borderColor: '#F80050', // Color del borde
+                borderColor: '#141618', // Color del borde
                 fill: true // Llenar el área bajo la línea
             }]
         });
@@ -132,8 +132,8 @@ export default function GraficoProductos() {
             datasets: [{
                 label: 'Cantidad de productos vendidos',
                 data: data,
-                backgroundColor: 'rgba(248, 0, 80, 0.4)', // Color de fondo
-                borderColor: '#F80050', // Color del borde
+                backgroundColor: 'rgba(0, 0, 0, 0.4)', // Color de fondo
+                borderColor: '#141618', // Color del borde
                 fill: true // Llenar el área bajo la línea
             }]
         });

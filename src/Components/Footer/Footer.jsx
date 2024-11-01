@@ -1,16 +1,34 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Footer.css'
 import { Link as Anchor } from 'react-router-dom';
 import logo from '../../images/logo.png'
 import baseURL from '../url';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+
 export default function Footer() {
     const [tienda, setTienda] = useState([]);
+    const [categorias, setCategorias] = useState([]);
 
     useEffect(() => {
-        cargarTienda()
+        cargarCategorias();
+        cargarTienda();
     }, []);
+
+    const cargarCategorias = () => {
+        fetch(`${baseURL}/categoriasGet.php`, {
+            method: 'GET',
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Mezclar las categorías aleatoriamente
+                const shuffledCategorias = data.categorias?.sort(() => 0.5 - Math.random());
+                // Tomar las primeras 3 categorías de las mezcladas
+                setCategorias(shuffledCategorias.slice(0, 3));
+            })
+            .catch(error => console.error('Error al cargar datos:', error));
+    };
+
     const cargarTienda = () => {
         fetch(`${baseURL}/tiendaGet.php`, {
             method: 'GET',
@@ -21,9 +39,6 @@ export default function Footer() {
             })
             .catch(error => console.error('Error al cargar datos:', error));
     };
-
-
-
 
     return (
         <div className='FooterContain'>
@@ -41,19 +56,26 @@ export default function Footer() {
                 ) : (
                     <h2>Mi Tienda</h2>
                 )}
-
-
             </div>
 
             <div className='footerText'>
                 <h3>Contacto Sucursal</h3>
-                <Anchor to={`mailto:${tienda.email}`} target="_blank">{tienda.email}</Anchor>
                 <Anchor to={`https://www.google.com/maps?q=${encodeURIComponent(tienda.direccion)}`} target="_blank">{tienda.direccion}</Anchor>
+                <Anchor to={`mailto:${tienda.email}`} target="_blank">{tienda.email}</Anchor>
                 <div className='socials'>
                     <Anchor to={tienda.instagram} target="_blank"><i className='fa fa-instagram'></i></Anchor>
                     <Anchor to={`tel:${tienda.telefono}`} target="_blank"><i className='fa fa-whatsapp'></i></Anchor>
                     <Anchor to={tienda.facebook} target="_blank"><i className='fa fa-facebook'></i></Anchor>
                 </div>
+            </div>
+
+            <div className='footerText'>
+                <h3>Categorias</h3>
+                {
+                    categorias?.map((item, index) => (
+                        <Anchor key={index} to={`/categoria/${item.idCategoria}`}>{item.categoria}</Anchor>
+                    ))
+                }
             </div>
 
             <div className='footerText'>
@@ -63,5 +85,5 @@ export default function Footer() {
                 </Anchor>
             </div>
         </div>
-    )
+    );
 }

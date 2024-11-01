@@ -130,6 +130,7 @@ export default function NewPedido() {
             items: item?.items,
             precio: item.precio,
             imagen: obtenerImagen(item),
+            estado: 'Pendiente'
         }));
 
         const productosPedidoJSON = JSON.stringify(productosPedido);

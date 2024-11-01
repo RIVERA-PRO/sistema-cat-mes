@@ -37,6 +37,13 @@ try {
         $nuevaSubCategoria = isset($data['nuevaSubCategoria']) ? $data['nuevaSubCategoria'] : null;
         $nuevoPrecio = isset($data['nuevoPrecio']) ? $data['nuevoPrecio'] : null;
         $masVendido = isset($data['masVendido']) ? $data['masVendido'] : null; 
+
+        // Validar que el título no contenga '/' o '\'
+        if (strpos($nuevoTitulo, '/') !== false || strpos($nuevoTitulo, '\\') !== false) {
+            echo json_encode(["error" => "El título no debe contener '/' o '\\'."]);
+            exit;
+        }
+
          // Agregar campos del 1 al 15 como items
          $item1 = isset($data['item1']) ? $data['item1'] : null;
          $item2 = isset($data['item2']) ? $data['item2'] : null;
@@ -51,6 +58,7 @@ try {
          $precioAnterior = isset($data['precioAnterior']) ? $data['precioAnterior'] : null;
          $stock = isset($data['stock']) ? $data['stock'] : null;
          $verItems = isset($data['verItems']) ? $data['verItems'] : null;
+
         if (empty($nuevaCategoria)) {
             $sqlSelect = "SELECT idCategoria FROM productos WHERE idProducto = :idProducto";
             $stmt = $conexion->prepare($sqlSelect);

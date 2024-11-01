@@ -44,7 +44,14 @@ try {
         $precioAnterior = $_POST['precioAnterior'];
         $stock = $_POST['stock'];
         $verItems = $_POST['verItems'];
-        if (!empty($titulo) && !empty($precio) &&  !empty($idCategoria) &&  !empty($masVendido)  ) {
+
+        // Validar que el título no contenga caracteres prohibidos
+        if (strpos($titulo, '/') !== false || strpos($titulo, '\\') !== false) {
+            echo json_encode(["error" => "El título no debe contener caracteres como / o \\"]);
+            exit;
+        }
+
+        if (!empty($titulo) && !empty($precio) && !empty($idCategoria) && !empty($masVendido)) {
 
             // Verificar si se enviaron imágenes
             $imagenesPresentes = isset($_FILES['imagen1']) || isset($_FILES['imagen2']) || isset($_FILES['imagen3']) || isset($_FILES['imagen4']);

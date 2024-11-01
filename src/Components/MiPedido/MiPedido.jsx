@@ -5,6 +5,7 @@ import './MiPedido.css';
 import 'jspdf-autotable';
 import baseURL from '../url';
 import moneda from '../moneda';
+import contador from '../contador';
 import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -15,8 +16,10 @@ export default function MiPedido() {
     const [idPedido, setIdPedido] = useState('');
     const [pedidoDetalle, setPedidoDetalle] = useState(null);
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [mensaje, setMensaje] = useState('');
     useEffect(() => {
         cargarPedidos();
+        cargarProductos();
     }, []);
 
     const cargarPedidos = () => {
@@ -31,8 +34,32 @@ export default function MiPedido() {
             .catch(error => console.error('Error al cargar pedidos:', error));
     };
 
+    const [counter, setCounter] = useState(contador);
+    const [isPaused, setIsPaused] = useState(false);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (!isPaused) {
+                setCounter((prevCounter) => {
+                    if (prevCounter === 1) {
+                        recargar();
+                        return contador;
+                    }
+                    return prevCounter - 1;
+                });
+            }
+        }, 1000);
 
+        return () => clearInterval(interval);
+    }, [isPaused]);
+
+    const togglePause = () => {
+        setIsPaused(!isPaused);
+    };
+
+    const recargar = () => {
+        cargarPedidos();
+    };
 
     const openModal = () => {
         setModalIsOpen(true);
@@ -72,6 +99,127 @@ export default function MiPedido() {
             setPedidoDetalle(null);
         }
     };
+    const [cartItems, setCartItems] = useState([]);
+    const [productos, setProductos] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [totalPrice, setTotalPrice] = useState(0);
+
+    useEffect(() => {
+        // Calcular el precio total al cargar el carrito o al actualizar los productos
+        let totalPriceCalc = 0;
+        cartItems.forEach(item => {
+            totalPriceCalc += item.precio * item.cantidad;
+        });
+        setTotalPrice(totalPriceCalc);
+    }, [cartItems]);
+
+    const cargarProductos = () => {
+        fetch(`${baseURL}/productosGet.php`, {
+            method: 'GET',
+        })
+            .then(response => response.json())
+            .then(data => {
+                setProductos(data.productos || []);
+            })
+            .catch(error => console.error('Error al cargar productos:', error));
+    };
+
+    useEffect(() => {
+        const fetchCartItems = async () => {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const promises = cart.map(async (cartItem) => {
+                const producto = productos.find(producto => producto.idProducto === cartItem.idProducto);
+                return {
+                    ...producto,
+                    cantidad: cartItem.cantidad,
+                    item: cartItem.item,
+                };
+            });
+
+            Promise.all(promises)
+                .then((items) => {
+                    setCartItems(items);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    console.error('Error al obtener detalles del carrito:', error);
+                    setLoading(false);
+                });
+        };
+
+        fetchCartItems();
+    }, [productos, isFocused]);
+
+    const obtenerImagen = (item) => {
+        return item.imagen1 || item.imagen2 || item.imagen3 || item.imagen4 || null;
+    };
+    const clearCart = () => {
+        setCartItems([]);
+        localStorage.removeItem('cart');
+    };
+    const agregarDatosPedido = () => {
+        const datosPedido = {
+            idPedido: pedidoDetalle.idPedido,
+            productos: cartItems.map(item => ({
+                titulo: item.titulo,
+                cantidad: item.cantidad,
+                precio: item.precio,
+                imagen: obtenerImagen(item),
+                item: item.item,
+                categoria: item.categoria,
+                estado: 'Pendiente'
+            })),
+            total: totalPrice.toFixed(2)
+        };
+        setMensaje('Procesando...');
+        fetch(`${baseURL}/miPedidoPut.php?idPedido=${datosPedido.idPedido}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                productos: datosPedido.productos,
+                total: datosPedido.total
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.mensaje) {
+                    setMensaje('');
+                    Swal.fire({
+                        title: 'Éxito',
+                        text: data.mensaje,
+                        icon: 'success',
+                        confirmButtonText: 'Aceptar'
+                    });
+                    clearCart()
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+
+                } else {
+                    setMensaje('');
+                    Swal.fire({
+                        title: 'Error al actualizar el pedido',
+                        text: data.mensaje,
+                        icon: 'error',
+                        confirmButtonText: 'Aceptar'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error al actualizar el pedido:', error);
+                setMensaje('');
+                Swal.fire({
+                    title: 'Error al actualizar el pedido',
+                    text: error.mensaje,
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+
+            });
+    };
+
 
 
     return (
@@ -130,32 +278,51 @@ export default function MiPedido() {
                                         <div className='cardProductDataText'>
                                             <h3>{producto.titulo}</h3>
                                             <strong>{moneda} {producto.precio} <span>x{producto.cantidad}</span></strong>
-                                            <span>
-                                                {producto?.items?.map((sabor, index) => (
-                                                    <span key={index}>{sabor}, </span>
-                                                ))}
-                                            </span>
-
+                                            <span>{producto.item}</span>
+                                            <h5>{producto.categoria}</h5>
                                         </div>
                                     </div>
                                 ))}
                             </div>
 
-
+                            <fieldset className='deNonefieldset'>
+                                <legend>Productos</legend>
+                                <textarea
+                                    name='productos'
+                                    value={cartItems.map(item => ` ${item.categoria}, ${item.titulo}, x ${item.cantidad}, ${item.item}, ${item.precio}, ${obtenerImagen(item)} `).join('\n')}
+                                    readOnly
+                                />
+                            </fieldset>
                         </div>
                         <div className='deColumnCart'>
                             <h4>Total: {moneda} {pedidoDetalle && (
                                 pedidoDetalle?.total
                             )}
                             </h4>
+                            {
+                                cartItems?.length >= 1 && (
+                                    <>
+                                        <h4>Total carrito: {moneda} {totalPrice.toFixed(2)}</h4>
+                                        {mensaje ? (
+                                            <button type='button' className='btn' disabled>
+                                                {mensaje}
+                                            </button>
+                                        ) : (
+                                            <button onClick={agregarDatosPedido} className='btn'>Sumar el carrito al Pedido</button>
+                                        )}
+
+                                    </>
+                                )
+
+                            }
+
                         </div>
                     </div>
-                )
-                }
+                )}
 
 
 
-            </Modal >
-        </div >
+            </Modal>
+        </div>
     );
 }

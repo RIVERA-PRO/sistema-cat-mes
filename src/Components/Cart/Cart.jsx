@@ -269,7 +269,8 @@ export default function Cart() {
                     cantidad: item?.cantidad,
                     items: item?.items,
                     precio: item?.precio,
-                    imagen: obtenerImagen(item)
+                    imagen: obtenerImagen(item),
+                    estado: 'Pendiente'
                 };
             });
 
@@ -315,7 +316,7 @@ export default function Cart() {
                 );
 
                 // Aquí pasamos los datos necesarios a handleWhatsappMessage
-                handleWhatsappMessage(data);
+                // handleWhatsappMessage(data);
 
                 // Limpiar campos y cerrar modal
                 setName('');
@@ -520,33 +521,6 @@ export default function Cart() {
                                                             <label htmlFor={metodo.tipo}>{metodo.tipo}</label>
                                                         </div>
 
-                                                        {paymentMethod === 'Transferencia' && metodo.tipo === 'Transferencia' && (
-                                                            <section className='radioRecibi'>
-                                                                <label htmlFor="">Pago al recibirlo</label>
-                                                                <div>
-                                                                    <input
-                                                                        type="radio"
-                                                                        name="pagoRecibir"
-                                                                        id="Sí"
-                                                                        value="Si"
-                                                                        checked={pagoRecibir === 'Si'}
-                                                                        onChange={() => handlePagoRecibirChange('Si')}
-                                                                    />
-                                                                    <label htmlFor="Sí">Sí</label>
-                                                                </div>
-                                                                <div>
-                                                                    <input
-                                                                        type="radio"
-                                                                        name="pagoRecibir"
-                                                                        id="No"
-                                                                        value="No"
-                                                                        checked={pagoRecibir === 'No'}
-                                                                        onChange={() => handlePagoRecibirChange('No')}
-                                                                    />
-                                                                    <label htmlFor="No">No (envío comprobante)</label>
-                                                                </div>
-                                                            </section>
-                                                        )}
                                                     </section>
                                                 ))}
 

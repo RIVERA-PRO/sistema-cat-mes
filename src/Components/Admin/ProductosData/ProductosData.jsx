@@ -537,7 +537,7 @@ export default function ProductosData() {
                         <div className='sectiontext' style={{ display: selectedSection === 'texto' ? 'flex' : 'none' }}>
                             <div className='flexGrap'>
                                 <fieldset id='titulo'>
-                                    <legend>Titulo (*)</legend>
+                                    <legend>Titulo (*) No debe contener (/)</legend>
                                     <input
                                         type="text"
                                         value={nuevoTitulo}

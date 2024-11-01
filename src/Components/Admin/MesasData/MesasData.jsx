@@ -238,16 +238,16 @@ export default function MesasData() {
         pdf.text(`Teléfono: ${pedido.telefono}`, 5, y + 10);
         pdf.text(`Entrega: ${pedido.entrega}`, 5, y + 15);
         pdf.text(`Pago: ${pedido.pago}`, 5, y + 20);
-        pdf.text(`Pago a recibirlo: ${pedido.pagoRecibir || ''}`, 5, y + 25); // Mostrar solo el texto si no hay valor
-        pdf.text(`Estado: ${pedido.estado}`, 5, y + 30);
-        pdf.text(`Pagado: ${pedido.pagado}`, 5, y + 35);
-        pdf.text(`Código descuento: ${pedido.codigo}`, 5, y + 40);
-        pdf.text(`Nota: ${pedido.nota}`, 5, y + 45);
-        pdf.text(`------------------------------------------------------------------`, 5, y + 50);
-        pdf.text(`Productos:`, 5, y + 54);
+        // Se eliminó la línea del pago a recibir
+        pdf.text(`Estado: ${pedido.estado}`, 5, y + 25);
+        pdf.text(`Pagado: ${pedido.pagado}`, 5, y + 30);
+        pdf.text(`Código descuento: ${pedido.codigo}`, 5, y + 35);
+        pdf.text(`Nota: ${pedido.nota}`, 5, y + 40);
+        pdf.text(`------------------------------------------------------------------`, 5, y + 45);
+        pdf.text(`Productos:`, 5, y + 49);
 
         // Añadir productos del pedido si existen
-        let yProductos = y + 59;
+        let yProductos = y + 54;
         if (productos.length > 0) {
             productos.forEach((producto) => {
                 const itemsTexto = producto.items && producto.items.length > 0
@@ -288,6 +288,7 @@ export default function MesasData() {
         // Imprimir el ticket
         window.open(pdf.output('bloburl'), '_blank');
     };
+
     const [counter, setCounter] = useState(contador);
     const [isPaused, setIsPaused] = useState(false);
     useEffect(() => {
@@ -382,8 +383,8 @@ export default function MesasData() {
 
                         <div className='sectiontext' style={{ display: selectedSection === 'pedido' ? 'flex' : 'none' }}>
                             {
-                                pedidos.filter(item => item.idMesa === mesa.idMesa && item.estado !== "Pagado" && item.estado !== "Rechazado").length > 0
-                                    ? pedidos.filter(item => item.idMesa === mesa.idMesa && item.estado !== "Pagado" && item.estado !== "Rechazado").slice(0, 1).map(pedido => (
+                                pedidos?.filter(item => item.idMesa === mesa.idMesa && mesa.estado === "ocupada").length > 0
+                                    ? pedidos?.filter(item => item.idMesa === mesa.idMesa && mesa.estado === "ocupada").slice(0, 1).map(pedido => (
                                         <>
                                             <div key={pedido.idPedido} className='flexGrap'>
                                                 <div id='cardsProductData'>
@@ -391,6 +392,20 @@ export default function MesasData() {
                                                         <div key={producto.titulo} className='cardProductData'>
                                                             <img src={producto.imagen} alt="imagen" />
                                                             <div className='cardProductDataText'>
+                                                                <h5 style={{
+                                                                    color: '#FFFFFF',  // Color del texto en blanco
+                                                                    backgroundColor: producto.estado === 'Pendiente' ? '#DAA520' :
+                                                                        producto.estado === 'Preparacion' ? '#0000FF' :
+                                                                            producto.estado === 'Rechazado' ? '#FF0000' :
+                                                                                producto.estado === 'Entregado' ? '#008000' :
+                                                                                    '#3366FF',  // Color de fondo basado en el estado del producto
+                                                                    padding: '3px',  // Padding de 3px
+                                                                    textAlign: 'center',  // Alineación centrada
+                                                                    borderRadius: '3px',  // Bordes redondeados de 3px
+                                                                    width: '5rem'
+                                                                }}>
+                                                                    {producto.estado}
+                                                                </h5>
                                                                 <h3>{producto.titulo}</h3>
                                                                 <strong>{moneda} {producto.precio} <span>x{producto.cantidad}</span></strong>
                                                                 <span>

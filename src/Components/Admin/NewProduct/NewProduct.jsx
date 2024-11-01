@@ -261,7 +261,7 @@ export default function NewProduct() {
 
                             <div className='flexGrap'>
                                 <fieldset id='titulo'>
-                                    <legend>Título (*)</legend>
+                                    <legend>Título (*) No debe contener (/)</legend>
                                     <input
                                         type="text"
                                         id="titulo"
