@@ -77,6 +77,44 @@ export default function MiPedido() {
         setIdPedido(e.target.value);
     };
 
+    const marcarPedidoComoSolicitado = (idPedido) => {
+        const payload = {
+            estado: 'Solicitado',
+        };
+
+        fetch(`${baseURL}/pedidoSolicitado.php?idPedido=${idPedido}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    Swal.fire(
+                        'Error!',
+                        data.error,
+                        'error'
+                    );
+                } else {
+                    Swal.fire(
+                        'Exito!',
+                        data.mensaje,
+                        'success'
+                    );
+                    clearCart()
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                    cargarPedidos();
+                }
+            })
+            .catch(error => {
+                console.log(error.message);
+                toast.error(error.message);
+            });
+    };
     const buscarPedido = () => {
         const idPedidoInt = parseInt(idPedido, 10);
         const pedidoEncontrado = pedidos.find(pedido => pedido.idPedido === idPedidoInt);
@@ -298,25 +336,44 @@ export default function MiPedido() {
                             <h4>Total: {moneda} {pedidoDetalle && (
                                 pedidoDetalle?.total
                             )}
+
                             </h4>
                             {
-                                cartItems?.length >= 1 && (
+                                cartItems?.length >= 0 && (
                                     <>
-                                        <h4>Total carrito: {moneda} {totalPrice.toFixed(2)}</h4>
+                                        {cartItems.length >= 1 && (
+                                            <h4>Total carrito: {moneda} {totalPrice.toFixed(2)}</h4>
+                                        )}
                                         {mensaje ? (
                                             <button type='button' className='btn' disabled>
                                                 {mensaje}
                                             </button>
                                         ) : (
-                                            <button onClick={agregarDatosPedido} className='btn'>Sumar el carrito al Pedido</button>
+                                            <div className='deFlexBtnCart'>
+                                                {/* Si el carrito está vacío o tiene 0 items, mostrar solo "Pedir cuenta" */}
+                                                {cartItems.length <= 0 ? (
+                                                    <button onClick={() => marcarPedidoComoSolicitado(pedidoDetalle.idPedido)} className='btn'>
+                                                        Pedir cuenta
+                                                    </button>
+                                                ) : (
+                                                    <>
+                                                        {/* Si hay 1 o más items, mostrar ambos botones */}
+                                                        <button onClick={() => marcarPedidoComoSolicitado(pedidoDetalle.idPedido)} className='btn'>
+                                                            Pedir cuenta
+                                                        </button>
+                                                        <button onClick={agregarDatosPedido} className='btn'>Sumar al Pedido</button>
+                                                    </>
+                                                )}
+                                            </div>
                                         )}
-
                                     </>
                                 )
-
                             }
 
+
+
                         </div>
+
                     </div>
                 )}
 

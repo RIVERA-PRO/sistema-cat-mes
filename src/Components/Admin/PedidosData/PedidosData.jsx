@@ -603,7 +603,7 @@ export default function PedidosData() {
     }, {});
 
     // Filtramos los estados que deseas mostrar
-    const estados = ['Pendiente', 'Preparacion', 'Terminado', 'Entregado', 'Rechazado'];
+    const estados = ['Pendiente', 'Preparacion', 'Terminado', 'Entregado', 'Solicitado', 'Rechazado'];
     const toggleDetalles = (idPedido) => {
         setDetallesVisibles((prev) => ({
             ...prev,
@@ -1022,6 +1022,14 @@ export default function PedidosData() {
                                             onClick={() => setNuevoEstado('Entregado')}
                                         >
                                             Entregado
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            className={nuevoEstado === 'Solicitado' || (nuevoEstado === '' && pedido.estado === 'Solicitado') ? 'activo' : 'Noactivo'}
+                                            onClick={() => setNuevoEstado('Solicitado')}
+                                        >
+                                            Solicitado
                                         </button>
                                         <button
                                             type="button"
