@@ -12,9 +12,8 @@
 .MiPedidoContain .modal-content-cart{
     width: 100%;
     overflow-y: scroll;
-    min-height: 60vh;
+    height: 55vh!important;
     padding: 10px 20px;
-   
     
 }
 .modal-cart .inputSearch{
