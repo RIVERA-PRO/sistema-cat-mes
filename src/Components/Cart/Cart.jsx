@@ -258,7 +258,7 @@ export default function Cart() {
     };
     const crearPedido = async () => {
         setMensaje('Procesando...');
-        const mesaFiltrada = mesas?.filter(mes => mes.idMesa === idMesa)?.map(mesaMap => mesaMap.mesa)
+        const mesaFiltrada = mesas?.filter(mes => mes.idMesa === idMesa)?.map(mesaMap => mesaMap.mesa);
         try {
             // Construir la lista de productos del pedido
             const productosPedido = cartItems?.map(item => {
@@ -282,7 +282,6 @@ export default function Cart() {
             cartItems.forEach(item => {
                 totalPrice += item?.precio * item?.cantidad;
             });
-
 
             // Enviar el pedido con el precio total descontado
             const formData = new FormData();
@@ -315,8 +314,8 @@ export default function Cart() {
                     'success'
                 );
 
-                // Aquí pasamos los datos necesarios a handleWhatsappMessage
-                // handleWhatsappMessage(data);
+                // Guardar el idPedido en localStorage
+                localStorage.setItem('idPedido', data.idPedido);
 
                 // Limpiar campos y cerrar modal
                 setName('');
@@ -344,6 +343,7 @@ export default function Cart() {
             );
         }
     };
+
 
     useEffect(() => {
         if (metodos && metodos.length > 0) {

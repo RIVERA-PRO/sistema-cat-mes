@@ -13,14 +13,23 @@ import Swal from 'sweetalert2';
 export default function MiPedido() {
     const [pedidos, setPedidos] = useState([]);
     const [isFocused, setIsFocused] = useState(false);
-    const [idPedido, setIdPedido] = useState('');
+    const [idPedido, setIdPedido] = useState(localStorage.getItem('idPedido') || '');
     const [pedidoDetalle, setPedidoDetalle] = useState(null);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [mensaje, setMensaje] = useState('');
+
     useEffect(() => {
         cargarPedidos();
         cargarProductos();
     }, []);
+
+    useEffect(() => {
+        // Si existe un idPedido en localStorage, intenta buscarlo automáticamente al abrir el modal
+        if (idPedido) {
+            buscarPedido();
+        }
+    }, [modalIsOpen]);
+
 
     const cargarPedidos = () => {
         fetch(`${baseURL}/pedidoGet.php`, {
@@ -69,7 +78,6 @@ export default function MiPedido() {
     const closeModal = () => {
         setModalIsOpen(false);
         setIsFocused(false);
-        setIdPedido('');
         setPedidoDetalle(null);
     };
 
@@ -104,9 +112,7 @@ export default function MiPedido() {
                         'success'
                     );
                     clearCart()
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
+                    closeModal()
                     cargarPedidos();
                 }
             })
@@ -115,9 +121,12 @@ export default function MiPedido() {
                 toast.error(error.message);
             });
     };
-    const buscarPedido = () => {
+    // Dentro de tu componente MiPedido
+
+    // Función para buscar pedido con alerta
+    const buscarPedidoConAlerta = () => {
         const idPedidoInt = parseInt(idPedido, 10);
-        const pedidoEncontrado = pedidos.find(pedido => pedido.idPedido === idPedidoInt);
+        const pedidoEncontrado = pedidos?.find(pedido => pedido.idPedido === idPedidoInt);
 
         if (pedidoEncontrado) {
             setPedidoDetalle(pedidoEncontrado);
@@ -137,6 +146,21 @@ export default function MiPedido() {
             setPedidoDetalle(null);
         }
     };
+
+    // Función para buscar pedido sin alerta (al abrir modal)
+    const buscarPedido = () => {
+        const idPedidoInt = parseInt(idPedido, 10);
+        const pedidoEncontrado = pedidos?.find(pedido => pedido.idPedido === idPedidoInt);
+
+        if (pedidoEncontrado) {
+            setPedidoDetalle(pedidoEncontrado);
+        } else {
+            setPedidoDetalle(null);
+        }
+    };
+
+
+
     const [cartItems, setCartItems] = useState([]);
     const [productos, setProductos] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -285,11 +309,9 @@ export default function MiPedido() {
                             onChange={handleInputChange}
                             className="input"
                         />
-
-                        <FontAwesomeIcon icon={faSearch} onClick={buscarPedido} className="search-icon" />
+                        <FontAwesomeIcon icon={faSearch} onClick={buscarPedidoConAlerta} className="search-icon" />
                     </fieldset>
                 </div>
-
                 {pedidoDetalle && (
                     <div className='MiPedidoContain'>
 
