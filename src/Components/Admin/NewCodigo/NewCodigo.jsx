@@ -249,7 +249,6 @@ export default function NewCodigo() {
                                         <option value="">Selecciona opción</option>
                                         <option value='porcentaje'>Porcentaje de descuento</option>
                                         <option value='fijo'>Monto fijo</option>
-                                        <option value='2x1'>(paga unidad de mayor precio)</option>
                                     </select>
                                 </fieldset>
 
