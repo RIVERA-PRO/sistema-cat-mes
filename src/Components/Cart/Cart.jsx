@@ -246,6 +246,9 @@ export default function Cart() {
     const [mesas, setMesas] = useState([]);
     const [idMesa, setIdMesa] = useState('');
     const [selectedMesa, setSelectedMesa] = useState('');
+    const handleSelectChange = (event) => {
+        setIdMesa(event.target.value);
+    };
     const cargarMesas = () => {
         fetch(`${baseURL}/mesaGet.php`, {
             method: 'GET',
@@ -258,7 +261,7 @@ export default function Cart() {
     };
     const crearPedido = async () => {
         setMensaje('Procesando...');
-        const mesaFiltrada = mesas?.filter(mes => mes.idMesa === idMesa)?.map(mesaMap => mesaMap.mesa);
+        const mesaFiltrada = mesas?.filter(mes => mes.idMesa == idMesa)?.map(mesaMap => mesaMap.mesa);
         try {
             // Construir la lista de productos del pedido
             const productosPedido = cartItems?.map(item => {
@@ -564,29 +567,25 @@ export default function Cart() {
                                                 onChange={(e) => setNoteText(e.target.value)}
                                             />
                                             <div className='mesasGrapCart'>
-                                                {mesas.map(item => (
-                                                    <div
-                                                        key={item.idMesa}
-                                                        className={`mesaCard ${item.estado === 'libre' ? (selectedMesa === item.idMesa ? 'selectedMesa' : 'bg-green') : 'bg-red'}`}
-                                                        onClick={() => { if (item.estado === 'libre') setIdMesa(item.idMesa) }}
-                                                    >
-                                                        <label>
-                                                            {item.mesa}
-                                                        </label>
-                                                        <span>
-                                                            {item.estado === 'libre' ? (selectedMesa === item.idMesa ? 'selectedMesa' : '') : 'ocupada'}
-                                                        </span>
-                                                        {item.estado === 'libre' && (
-                                                            <input
-                                                                type='radio'
-                                                                name='productos'
-                                                                value={item.idMesa}
-                                                                readOnly
-                                                                checked={idMesa === item.idMesa}
-                                                            />
-                                                        )}
-                                                    </div>
-                                                ))}
+                                                <select
+                                                    id="idMesa"
+                                                    value={idMesa}
+                                                    name="idMesa"
+                                                    onChange={handleSelectChange}
+                                                    className="idMesa"
+                                                >
+                                                    <option value="" disabled>Selecciona una mesa (*)</option>
+                                                    {mesas.map((item) => (
+                                                        <option
+                                                            key={item.idMesa}
+                                                            value={item.idMesa}
+                                                            disabled={item.estado === 'ocupada'}
+                                                        >
+                                                            {item.mesa} {item.estado === 'ocupada' ? '(Ocupada)' : ''}
+                                                        </option>
+                                                    ))}
+                                                </select>
+
                                             </div>
 
                                             <fieldset className='deNonefieldset'>

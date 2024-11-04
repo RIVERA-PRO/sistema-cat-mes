@@ -336,6 +336,21 @@ export default function MiPedido() {
                                     <div key={producto.titulo} className='cardProductData'>
                                         <img src={producto.imagen} alt="imagen" />
                                         <div className='cardProductDataText'>
+                                            <h5 style={{
+                                                color: '#FFFFFF',
+                                                backgroundColor: producto.estado === 'Pendiente' ? '#DAA520' :
+                                                    producto.estado === 'Preparacion' ? '#0000FF' :
+                                                        producto.estado === 'Rechazado' ? '#FF0000' :
+                                                            producto.estado === 'Entregado' ? '#008000' :
+                                                                '#3366FF',
+                                                padding: '3px',
+                                                textAlign: 'center',
+                                                borderRadius: '3px',
+                                                width: '5rem',
+                                                fontSize: '0.6em'
+                                            }}>
+                                                {producto.estado}
+                                            </h5>
                                             <h3>{producto.titulo}</h3>
                                             <strong>{moneda} {producto.precio} <span>x{producto.cantidad}</span></strong>
                                             <span>{producto.item}</span>
@@ -363,29 +378,47 @@ export default function MiPedido() {
                             {
                                 cartItems?.length >= 0 && (
                                     <>
-                                        {cartItems.length >= 1 && (
-                                            <h4>Total carrito: {moneda} {totalPrice.toFixed(2)}</h4>
-                                        )}
+
+                                        {
+                                            (pedidoDetalle?.estado !== 'Solicitado' || pedidoDetalle?.estado !== 'Rechazado') &&
+
+                                            <>
+                                                {cartItems.length >= 1 && (
+                                                    <h4>Total carrito: {moneda} {totalPrice.toFixed(2)}</h4>
+                                                )}
+                                            </>
+                                        }
                                         {mensaje ? (
                                             <button type='button' className='btn' disabled>
                                                 {mensaje}
                                             </button>
                                         ) : (
                                             <div className='deFlexBtnCart'>
-                                                {/* Si el carrito está vacío o tiene 0 items, mostrar solo "Pedir cuenta" */}
-                                                {cartItems.length <= 0 ? (
-                                                    <button onClick={() => marcarPedidoComoSolicitado(pedidoDetalle.idPedido)} className='btn'>
-                                                        Pedir cuenta
-                                                    </button>
-                                                ) : (
-                                                    <>
-                                                        {/* Si hay 1 o más items, mostrar ambos botones */}
-                                                        <button onClick={() => marcarPedidoComoSolicitado(pedidoDetalle.idPedido)} className='btn'>
-                                                            Pedir cuenta
-                                                        </button>
-                                                        <button onClick={agregarDatosPedido} className='btn'>Sumar al Pedido</button>
-                                                    </>
-                                                )}
+
+                                                {
+                                                    (pedidoDetalle?.estado === 'Solicitado' || pedidoDetalle?.estado === 'Rechazado') ? (
+                                                        <></>
+                                                    ) : (
+                                                        <>
+                                                            {cartItems?.length <= 0 ? (
+                                                                <button onClick={() => marcarPedidoComoSolicitado(pedidoDetalle.idPedido)} className='btn'>
+                                                                    Pedir cuenta
+                                                                </button>
+                                                            ) : (
+                                                                <>
+                                                                    {/* Si hay 1 o más items, mostrar ambos botones */}
+                                                                    <button onClick={() => marcarPedidoComoSolicitado(pedidoDetalle.idPedido)} className='btn'>
+                                                                        Pedir cuenta
+                                                                    </button>
+                                                                    <button onClick={agregarDatosPedido} className='btn'>Sumar al Pedido</button>
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    )
+
+
+                                                }
+
                                             </div>
                                         )}
                                     </>

@@ -289,26 +289,24 @@ export default function MesasData() {
         window.open(pdf.output('bloburl'), '_blank');
     };
 
-    const [counter, setCounter] = useState(contador);
-    const [isPaused, setIsPaused] = useState(false);
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (!isPaused) {
-                setCounter((prevCounter) => {
-                    if (prevCounter === 1) {
-                        recargar();
-                        return contador;
-                    }
-                    return prevCounter - 1;
-                });
-            }
-        }, 1000);
+    // const [counter, setCounter] = useState(contador);
+    // const [isPaused, setIsPaused] = useState(false);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         if (!isPaused) {
+    //             setCounter((prevCounter) => {
+    //                 if (prevCounter === 1) {
+    //                     recargar();
+    //                     return contador;
+    //                 }
+    //                 return prevCounter - 1;
+    //             });
+    //         }
+    //     }, 1000);
 
-        return () => clearInterval(interval);
-    }, [isPaused]);
-    const togglePause = () => {
-        setIsPaused(!isPaused);
-    };
+    //     return () => clearInterval(interval);
+    // }, [isPaused]);
+
 
 
     const recargar = () => {

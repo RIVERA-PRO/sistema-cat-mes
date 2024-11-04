@@ -45,21 +45,22 @@
 .cardProductDataText h3{
     color: var(--text-color2);
     font-weight: 500;
+    font-size: 1em;
 }
 .cardProductDataText h5{
     color: var(--text-color2);
     font-weight: 500;
-    font-size: 11px;
+    font-size: 10px;
 }
 .cardProductDataText span{
     color: var(--text-color2);
     font-weight: 500;
-    font-size: 13px;
+    opacity: .9;
 }
 .cardProductDataText strong{
     font-weight: 500;
     color: var(--color1);
-    font-size: 15px;
+    font-size: 0.8em;
 }
 .cardProductDataText strong span{
     padding-left: 2rem;
