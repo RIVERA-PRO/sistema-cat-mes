@@ -384,13 +384,17 @@ export default function MiPedido() {
                                     <>
 
                                         {
-                                            (pedidoDetalle?.estado !== 'Solicitado' || pedidoDetalle?.estado !== 'Rechazado') &&
+                                            (pedidoDetalle?.estado !== 'Solicitado' || pedidoDetalle?.estado !== 'Rechazado') ? (
+                                                <></>
+                                            ) : (
+                                                <>
+                                                    {cartItems.length >= 1 && (
+                                                        <h4>Total carrito: {moneda} {totalPrice.toFixed(2)}</h4>
+                                                    )}
+                                                </>
+                                            )
 
-                                            <>
-                                                {cartItems.length >= 1 && (
-                                                    <h4>Total carrito: {moneda} {totalPrice.toFixed(2)}</h4>
-                                                )}
-                                            </>
+
                                         }
                                         {mensaje ? (
                                             <button type='button' className='btn' disabled>
