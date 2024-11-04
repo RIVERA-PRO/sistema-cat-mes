@@ -55,7 +55,7 @@
 .cardProductDataText span{
     color: var(--text-color2);
     font-weight: 500;
-    opacity: .9;
+    font-size: 0.9em;
 }
 .cardProductDataText strong{
     font-weight: 500;

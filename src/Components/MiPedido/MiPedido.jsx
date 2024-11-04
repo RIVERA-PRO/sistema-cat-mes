@@ -353,7 +353,11 @@ export default function MiPedido() {
                                             </h5>
                                             <h3>{producto.titulo}</h3>
                                             <strong>{moneda} {producto.precio} <span>x{producto.cantidad}</span></strong>
-                                            <span>{producto.item}</span>
+                                            <span>
+                                                {producto?.items?.map((sabor, index) => (
+                                                    <span key={index}>{sabor}, </span>
+                                                ))}
+                                            </span>
                                             <h5>{producto.categoria}</h5>
                                         </div>
                                     </div>
