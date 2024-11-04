@@ -171,9 +171,7 @@ export default function Navbar() {
                             <Anchor to={`/dashboard/pedidos`} className={location.pathname === '/dashboard/pedidos' ? 'activeLink' : ''}>
                                 <FontAwesomeIcon icon={faRectangleList} /> Pedidos
                             </Anchor>
-                            <Anchor to={`/dashboard/mesas`} className={location.pathname === '/dashboard/mesas' ? 'activeLink' : ''}>
-                                <FontAwesomeIcon icon={faTable} /> Mesas
-                            </Anchor>
+
                         </div>
                     )}
                 </>
