@@ -176,6 +176,7 @@ export default function ProductosData() {
                             data.mensaje,
                             'success'
                         );
+                        window.location.reload();
                         cargarProductos();
                     })
                     .catch(error => {
@@ -537,7 +538,7 @@ export default function ProductosData() {
                         <div className='sectiontext' style={{ display: selectedSection === 'texto' ? 'flex' : 'none' }}>
                             <div className='flexGrap'>
                                 <fieldset id='titulo'>
-                                    <legend>Titulo (*) No debe contener (/)</legend>
+                                    <legend>Titulo (*)</legend>
                                     <input
                                         type="text"
                                         value={nuevoTitulo}

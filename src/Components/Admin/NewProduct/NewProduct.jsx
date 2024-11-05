@@ -6,6 +6,7 @@ import baseURL from '../../url';
 import imageIcon from '../../../images/imageIcon.png';
 import { fetchUsuario, getUsuario } from '../../user';
 import Swal from 'sweetalert2';
+import planes from '../../planes';
 export default function NewProduct() {
     const [mensaje, setMensaje] = useState('');
     const [imagenPreview, setImagenPreview] = useState([null, null, null, null]); // Arreglo para imágenes
@@ -226,6 +227,38 @@ export default function NewProduct() {
             'error'
         );
     }
+
+
+    //Calcular limite de Plan-----------------------------
+    const plan = planes[0]?.plan
+    const limitePlan = planes[0]?.limiteProducto
+    const mensagePlan = `¡Alcanzaste el límite del plan ${plan}! <br/>Tu límite son ${limitePlan} productos`
+    const [productos, setProductos] = useState([]);
+    const alertPlan = () => {
+        cargarProductos();
+        Swal.fire(
+            '¡Error!',
+            mensagePlan,
+            'error'
+        );
+    };
+    useEffect(() => {
+        cargarProductos();
+
+    }, []);
+    const cargarProductos = () => {
+        fetch(`${baseURL}/productosGet.php`, {
+            method: 'GET',
+        })
+            .then(response => response.json())
+            .then(data => {
+                setProductos(data.productos || []);
+                console.log(data.productos)
+            })
+            .catch(error => console.error('Error al cargar productos:', error));
+    };
+
+
     return (
         <div className='NewContain'>
             <ToastContainer />
@@ -234,21 +267,54 @@ export default function NewProduct() {
             ) : usuarioLegued?.idUsuario ? (
                 <>
                     {usuarioLegued?.rol === 'admin' ? (
-                        <button onClick={toggleModal} className='btnSave'>
-                            <span>+</span> Agregar
-                        </button>
+                        <>
+                            {
+                                productos?.length < limitePlan ? (
+                                    <button onClick={toggleModal} className='btnSave'>
+                                        <span>+</span> Agregar
+                                    </button>
+
+                                ) : (
+                                    <button onClick={alertPlan} className='btnSave'>
+                                        <span>+</span> Agregar
+                                    </button>
+                                )
+                            }
+                        </>
                     ) : usuarioLegued?.rol === 'colaborador' ? (
-                        <button onClick={toggleModal} className='btnSave'>
-                            <span>+</span> Agregar
-                        </button>
+                        <>
+                            {
+                                productos?.length < limitePlan ? (
+                                    <button onClick={toggleModal} className='btnSave'>
+                                        <span>+</span> Agregar
+                                    </button>
+
+                                ) : (
+                                    <button onClick={alertPlan} className='btnSave'>
+                                        <span>+</span> Agregar
+                                    </button>
+                                )
+                            }
+                        </>
                     ) : (
                         <></>
                     )}
                 </>
             ) : (
-                <button onClick={toggleModal} className='btnSave'>
-                    <span>+</span> Agregar
-                </button>
+                <>
+                    {
+                        productos?.length < limitePlan ? (
+                            <button onClick={toggleModal} className='btnSave'>
+                                <span>+</span> Agregar
+                            </button>
+
+                        ) : (
+                            <button onClick={alertPlan} className='btnSave'>
+                                <span>+</span> Agregar
+                            </button>
+                        )
+                    }
+                </>
             )}
             {modalOpen && (
                 <div className="modal">
@@ -261,7 +327,7 @@ export default function NewProduct() {
 
                             <div className='flexGrap'>
                                 <fieldset id='titulo'>
-                                    <legend>Título (*) No debe contener (/)</legend>
+                                    <legend>Título (*)</legend>
                                     <input
                                         type="text"
                                         id="titulo"

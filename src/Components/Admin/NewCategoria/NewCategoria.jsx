@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import baseURL from '../../url';
 import Swal from 'sweetalert2';
 import { fetchUsuario, getUsuario } from '../../user';
+import planes from '../../planes';
 export default function NewCategoria() {
     const [mensaje, setMensaje] = useState('');
     const [categoria, setCategoria] = useState('');
@@ -64,6 +65,34 @@ export default function NewCategoria() {
             'error'
         );
     }
+
+    //Calcular limite de Plan-----------------------------
+    const plan = planes[0]?.plan
+    const limitePlan = planes[0]?.limiteCategoria
+    const mensagePlan = `¡Alcanzaste el límite del plan ${plan}! <br/>Tu límite son ${limitePlan} categorias`
+    const [categorias, setCategorias] = useState([]);
+    const alertPlan = () => {
+        cargarCategoria();
+        Swal.fire(
+            '¡Error!',
+            mensagePlan,
+            'error'
+        );
+    };
+    useEffect(() => {
+        cargarCategoria();
+
+    }, []);
+    const cargarCategoria = () => {
+        fetch(`${baseURL}/categoriasGet.php`, {
+            method: 'GET',
+        })
+            .then(response => response.json())
+            .then(data => {
+                setCategorias(data.categorias || []);
+            })
+            .catch(error => console.error('Error al cargar categorías:', error));
+    };
     return (
         <div className='NewContain'>
             <ToastContainer />
@@ -72,21 +101,54 @@ export default function NewCategoria() {
             ) : usuarioLegued?.idUsuario ? (
                 <>
                     {usuarioLegued?.rol === 'admin' ? (
-                        <button onClick={toggleModal} className='btnSave'>
-                            <span>+</span> Categoria
-                        </button>
+                        <>
+                            {
+                                categorias?.length < limitePlan ? (
+                                    <button onClick={toggleModal} className='btnSave'>
+                                        <span>+</span> Agregar
+                                    </button>
+
+                                ) : (
+                                    <button onClick={alertPlan} className='btnSave'>
+                                        <span>+</span> Agregar
+                                    </button>
+                                )
+                            }
+                        </>
                     ) : usuarioLegued?.rol === 'colaborador' ? (
-                        <button onClick={toggleModal} className='btnSave'>
-                            <span>+</span> Categoria
-                        </button>
+                        <>
+                            {
+                                categorias?.length < limitePlan ? (
+                                    <button onClick={toggleModal} className='btnSave'>
+                                        <span>+</span> Agregar
+                                    </button>
+
+                                ) : (
+                                    <button onClick={alertPlan} className='btnSave'>
+                                        <span>+</span> Agregar
+                                    </button>
+                                )
+                            }
+                        </>
                     ) : (
                         <></>
                     )}
                 </>
             ) : (
-                <button onClick={toggleModal} className='btnSave'>
-                    <span>+</span> Categoria
-                </button>
+                <>
+                    {
+                        categorias?.length < limitePlan ? (
+                            <button onClick={toggleModal} className='btnSave'>
+                                <span>+</span> Agregar
+                            </button>
+
+                        ) : (
+                            <button onClick={alertPlan} className='btnSave'>
+                                <span>+</span> Agregar
+                            </button>
+                        )
+                    }
+                </>
             )}
             {modalOpen && (
                 <div className='modal'>
