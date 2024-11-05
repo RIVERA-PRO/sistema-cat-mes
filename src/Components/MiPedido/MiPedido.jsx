@@ -5,7 +5,6 @@ import './MiPedido.css';
 import 'jspdf-autotable';
 import baseURL from '../url';
 import moneda from '../moneda';
-import contador from '../contador';
 import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -43,32 +42,8 @@ export default function MiPedido() {
             .catch(error => console.error('Error al cargar pedidos:', error));
     };
 
-    const [counter, setCounter] = useState(contador);
-    const [isPaused, setIsPaused] = useState(false);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (!isPaused) {
-                setCounter((prevCounter) => {
-                    if (prevCounter === 1) {
-                        recargar();
-                        return contador;
-                    }
-                    return prevCounter - 1;
-                });
-            }
-        }, 1000);
 
-        return () => clearInterval(interval);
-    }, [isPaused]);
-
-    const togglePause = () => {
-        setIsPaused(!isPaused);
-    };
-
-    const recargar = () => {
-        cargarPedidos();
-    };
 
     const openModal = () => {
         setModalIsOpen(true);
@@ -384,7 +359,7 @@ export default function MiPedido() {
                                     <>
 
                                         {
-                                            (pedidoDetalle?.estado !== 'Solicitado' || pedidoDetalle?.estado !== 'Rechazado') ? (
+                                            (pedidoDetalle?.estado !== 'Solicitado' || pedidoDetalle?.estado !== 'Rechazado' || pedidoDetalle?.estado === 'Finalizado') ? (
                                                 <></>
                                             ) : (
                                                 <>
@@ -404,7 +379,7 @@ export default function MiPedido() {
                                             <div className='deFlexBtnCart'>
 
                                                 {
-                                                    (pedidoDetalle?.estado === 'Solicitado' || pedidoDetalle?.estado === 'Rechazado') ? (
+                                                    (pedidoDetalle?.estado === 'Solicitado' || pedidoDetalle?.estado === 'Rechazado' || pedidoDetalle?.estado === 'Finalizado') ? (
                                                         <></>
                                                     ) : (
                                                         <>

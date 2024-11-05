@@ -1033,15 +1033,23 @@ export default function PedidosData() {
                                         </button>
                                         <button
                                             type="button"
+                                            className={nuevoEstado === 'Finalizado' || (nuevoEstado === '' && pedido.estado === 'Finalizado') ? 'activo' : 'Noactivo'}
+                                            onClick={() => setNuevoEstado('Finalizado')}
+                                        >
+                                            Finalizado
+                                        </button>
+                                        <button
+                                            type="button"
                                             className={nuevoEstado === 'Rechazado' || (nuevoEstado === '' && pedido.estado === 'Rechazado') ? 'activo' : 'Noactivo'}
                                             onClick={() => setNuevoEstado('Rechazado')}
                                         >
                                             Rechazado
                                         </button>
+
                                     </div>
                                 </fieldset>
 
-                                <fieldset>
+                                <fieldset id="fieldsetAuto">
                                     <legend>Pagado</legend>
                                     <div className='deFlexBtnsFilset'>
                                         <button
