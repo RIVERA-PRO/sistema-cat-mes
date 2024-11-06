@@ -134,12 +134,16 @@ export default function NewPedido() {
         }));
 
         const productosPedidoJSON = JSON.stringify(productosPedido);
+        let estadoFinal = (estado === "Entregado" || estado === "Solicitado") && (pagado === "Si")
+            ? "Finalizado"
+            : estado;
+
 
         const formData = new FormData();
         formData.append('idMesa', idMesa);
         formData.append('nombre', nombre);
         formData.append('telefono', telefono);
-        formData.append('estado', estado);
+        formData.append('estado', estadoFinal);
         formData.append('entrega', mesaFiltrada);
         formData.append('pago', pago);
         formData.append('createdAt', createdAt);

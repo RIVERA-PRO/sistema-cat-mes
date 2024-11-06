@@ -20,6 +20,7 @@ export default function PedidosData() {
     const [modalVisible, setModalVisible] = useState(false);
     const [nuevoEstado, setNuevoEstado] = useState('');
     const [pagado, setPagado] = useState('');
+    const [pago, setPago] = useState('');
     const [pedido, setPedido] = useState({});
     const [selectedSection, setSelectedSection] = useState('texto');
     const [tienda, setTienda] = useState([]);
@@ -128,6 +129,7 @@ export default function PedidosData() {
     useEffect(() => {
         setNuevoEstado(pedido.estado)
         setPagado(pedido.pagado)
+        setPago(pedido.pago)
     }, [pedido]);
 
     const abrirModal = (item) => {
@@ -142,9 +144,16 @@ export default function PedidosData() {
     };
 
     const handleUpdateText = (idPedido) => {
+        // Definimos el estado en función de las condiciones
+        let estadoFinal = (nuevoEstado === "Entregado" || nuevoEstado === "Solicitado" || pedido.estado === "Entregado" || pedido.estado === "Solicitado") &&
+            (pagado === "Si" || pedido.pagado === "Si")
+            ? "Finalizado"
+            : (nuevoEstado !== '' ? nuevoEstado : pedido.estado);
+
         const payload = {
-            estado: nuevoEstado !== '' ? nuevoEstado : pedido.estado,
+            estado: estadoFinal,
             pagado: pagado !== '' ? pagado : pedido.pagado,
+            pago: pago !== '' ? pago : pedido.pago,
         };
 
         fetch(`${baseURL}/pedidoPut.php?idPedido=${idPedido}`, {
@@ -603,7 +612,7 @@ export default function PedidosData() {
     }, {});
 
     // Filtramos los estados que deseas mostrar
-    const estados = ['Pendiente', 'Preparacion', 'Terminado', 'Entregado', 'Solicitado', 'Rechazado'];
+    const estados = ['Pendiente', 'Preparacion', 'Terminado', 'Entregado', 'Solicitado'];
     const toggleDetalles = (idPedido) => {
         setDetallesVisibles((prev) => ({
             ...prev,
@@ -661,6 +670,7 @@ export default function PedidosData() {
                             <option value="Preparacion">Preparacion</option>
                             <option value="Terminado">Terminado</option>
                             <option value="Entregado">Entregado</option>
+                            <option value="Finalizado">Finalizado</option>
                             <option value="Rechazado">Rechazado</option>
                         </select>
                     </div>
@@ -729,13 +739,12 @@ export default function PedidosData() {
                                             })}</span>
                                             <span style={{ color: '#008000' }}>{moneda} {item.total}</span>
                                         </div>
-
+                                        <span>Entrega:  {item?.entrega}</span>
                                         <span>Pagado:  {item?.pagado}</span>
                                         {detallesVisibles[item.idPedido] && (
                                             <>
                                                 <span>Nombre: {item.nombre}</span>
                                                 <span>Teléfono: {item.telefono}</span>
-                                                <span>Entrega: {item.entrega}</span>
                                                 <span>Pago: {item.pago}</span>
                                             </>
                                         )}
@@ -950,13 +959,19 @@ export default function PedidosData() {
 
                                     />
                                 </fieldset>
+
                                 <fieldset>
                                     <legend>Pago</legend>
-                                    <input
-                                        value={pedido.pago}
-                                        disabled
-
-                                    />
+                                    <select
+                                        value={pago !== '' ? pago : pedido.pago}
+                                        onChange={(e) => setPago(e.target.value)}
+                                    >
+                                        <option value={pedido.pago}>{pedido.pago}</option>
+                                        {
+                                            metodos?.map(metod => (
+                                                <option value={metod.tipo}>{metod.tipo}</option>
+                                            ))}
+                                    </select>
                                 </fieldset>
                                 <fieldset>
                                     <legend>Entrega</legend>
@@ -1031,13 +1046,7 @@ export default function PedidosData() {
                                         >
                                             Solicitado
                                         </button>
-                                        <button
-                                            type="button"
-                                            className={nuevoEstado === 'Finalizado' || (nuevoEstado === '' && pedido.estado === 'Finalizado') ? 'activo' : 'Noactivo'}
-                                            onClick={() => setNuevoEstado('Finalizado')}
-                                        >
-                                            Finalizado
-                                        </button>
+
                                         <button
                                             type="button"
                                             className={nuevoEstado === 'Rechazado' || (nuevoEstado === '' && pedido.estado === 'Rechazado') ? 'activo' : 'Noactivo'}

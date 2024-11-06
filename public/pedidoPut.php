@@ -32,7 +32,7 @@ try {
         $data = json_decode(file_get_contents("php://input"), true);
         $nuevoEstado = isset($data['estado']) ? $data['estado'] : null;
         $pagado = isset($data['pagado']) ? $data['pagado'] : null; // Captura el campo pagado
-
+        $pago = isset($data['pago']) ? $data['pago'] : null;
         // Validar que se haya proporcionado un ID de pedido, un nuevo estado y el campo pagado
         if ($idPedido && $nuevoEstado !== null && $pagado !== null) {
             // Iniciar una transacción para asegurar que ambas actualizaciones se realicen correctamente
@@ -40,10 +40,11 @@ try {
 
             try {
                 // Actualizar el estado del pedido y el campo pagado
-                $sqlUpdatePedido = "UPDATE pedidos SET estado = :estado, pagado = :pagado WHERE idPedido = :idPedido";
+                $sqlUpdatePedido = "UPDATE pedidos SET estado = :estado, pagado = :pagado, pago=:pago WHERE idPedido = :idPedido";
                 $sentenciaUpdatePedido = $conexion->prepare($sqlUpdatePedido);
                 $sentenciaUpdatePedido->bindParam(':estado', $nuevoEstado);
                 $sentenciaUpdatePedido->bindParam(':pagado', $pagado); 
+                $sentenciaUpdatePedido->bindParam(':pago', $pago); 
                 $sentenciaUpdatePedido->bindParam(':idPedido', $idPedido, PDO::PARAM_INT);
 
                 if ($sentenciaUpdatePedido->execute()) {
