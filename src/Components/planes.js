@@ -1,14 +1,14 @@
 const planes = [
     // {
     //     plan: 'Basico',
-    //     limiteProducto: 30,
+    //     limiteProducto: 20,
     //     limiteCategoria: 3,
     //     limiteBanner: 1,
     //     limiteCodigos: 2,
     // },
     // {
     //     plan: 'Medio',
-    //     limiteProducto: 100,
+    //     limiteProducto: 40,
     //     limiteCategoria: 10,
     //     limiteBanner: 3,
     //     limiteCodigos: 5,
