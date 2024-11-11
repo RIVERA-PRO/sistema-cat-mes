@@ -15,6 +15,7 @@ import 'jspdf-autotable';
 import { useLocation } from 'react-router-dom';
 import { Link as Anchor } from 'react-router-dom';
 import NewPedido from '../NewPedido/NewPedido'
+import contador from '../../contador'
 export default function PedidosData() {
     const [pedidos, setPedidos] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
@@ -64,7 +65,6 @@ export default function PedidosData() {
             .then(response => response.json())
             .then(data => {
                 setPedidos(data.pedidos.reverse() || []);
-                console.log(data.pedidos)
             })
             .catch(error => console.error('Error al cargar pedidos:', error));
     };
@@ -204,7 +204,7 @@ export default function PedidosData() {
     });
 
 
-    const recargarProductos = () => {
+    const recargar = () => {
         cargarPedidos();
     };
     const invertirOrden = () => {
@@ -637,6 +637,25 @@ export default function PedidosData() {
         }
         return acc;
     }, {});
+
+    //Contador de recarga de pedidos
+    const [counter, setCounter] = useState(contador);
+    const [isPaused, setIsPaused] = useState(false);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (!isPaused) {
+                setCounter((prevCounter) => {
+                    if (prevCounter === 1) {
+                        recargar();
+                        return contador;
+                    }
+                    return prevCounter - 1;
+                });
+            }
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [isPaused]);
     return (
         <div>
 
@@ -701,7 +720,7 @@ export default function PedidosData() {
                             }
                         </select>
                     </div>
-                    <button className='reload' onClick={recargarProductos}><FontAwesomeIcon icon={faSync} /></button>
+                    <button className='reload' onClick={recargar}><FontAwesomeIcon icon={faSync} /></button>
                     <button className='reverse' onClick={invertirOrden}>
                         {ordenInvertido ? <FontAwesomeIcon icon={faArrowUp} /> : <FontAwesomeIcon icon={faArrowDown} />}
                     </button>

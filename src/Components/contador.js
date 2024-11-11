@@ -1,3 +1,3 @@
-const contador = 1;
+const contador = 20;
 
 export default contador;
