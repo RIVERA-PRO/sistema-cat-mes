@@ -542,6 +542,12 @@ fieldset input{
     align-items: center;
     
 }
+
+#AnchoSelect{
+    width: 100%;
+    border: none;
+    color: var(--text-color2);
+}
 @media (max-width: 1000px){
     .previevProduct img{
         width: 115px;

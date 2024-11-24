@@ -2,9 +2,9 @@
 const getBaseURL = () => {
     const currentHost = window.location.hostname; // Obtiene el host actual
     if (currentHost.startsWith('www.')) {
-        return 'http://quickorder-plus.stechdev.com';
+        return 'https://www.sistema-mesas.encatalogo.com';
     } else {
-        return 'https://quickorder-plus.stechdev.com';
+        return 'https://sistema-mesas.encatalogo.com';
     }
 };
 

@@ -179,8 +179,8 @@ export default function GraficoPedidos() {
                     label: labelGrafico,
                     data: data,
                     fill: true,
-                    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                    borderColor: '#141618',
+                    backgroundColor: 'rgba(248, 0, 80, 0.3)',
+                    borderColor: '#F80050',
                     tension: 0.4
                 }
             ]

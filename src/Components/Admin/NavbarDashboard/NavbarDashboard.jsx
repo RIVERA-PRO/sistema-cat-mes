@@ -136,7 +136,9 @@ export default function Navbar() {
                             <Anchor to={`/dashboard/banners`} className={location.pathname === '/dashboard/banners' ? 'activeLink' : ''}>
                                 <FontAwesomeIcon icon={faImage} /> Banners
                             </Anchor>
-
+                            <Anchor to={`/dashboard/reservas`} className={location.pathname === '/dashboard/reservas' ? 'activeLink' : ''}>
+                                <FontAwesomeIcon icon={faClipboardList} /> Reservas
+                            </Anchor>
                             <Anchor to={`/dashboard/promociones`} className={location.pathname === '/dashboard/promociones' ? 'activeLink' : ''}>
                                 <FontAwesomeIcon icon={faTag} /> Promociones
                             </Anchor>
@@ -161,6 +163,9 @@ export default function Navbar() {
                             </Anchor>
                             <Anchor to={`/dashboard/mesas`} className={location.pathname === '/dashboard/mesas' ? 'activeLink' : ''}>
                                 <FontAwesomeIcon icon={faTable} /> Mesas
+                            </Anchor>
+                            <Anchor to={`/dashboard/reservas`} className={location.pathname === '/dashboard/reservas' ? 'activeLink' : ''}>
+                                <FontAwesomeIcon icon={faClipboardList} /> Reservas
                             </Anchor>
                         </div>
                     ) : (
@@ -223,7 +228,9 @@ export default function Navbar() {
                     <Anchor to={`/dashboard/banners`} className={location.pathname === '/dashboard/banners' ? 'activeLink' : ''}>
                         <FontAwesomeIcon icon={faImage} /> Banners
                     </Anchor>
-
+                    <Anchor to={`/dashboard/reservas`} className={location.pathname === '/dashboard/reservas' ? 'activeLink' : ''}>
+                        <FontAwesomeIcon icon={faClipboardList} /> Reservas
+                    </Anchor>
 
                     <Anchor to={`/dashboard/promociones`} className={location.pathname === '/dashboard/promociones' ? 'activeLink' : ''}>
                         <FontAwesomeIcon icon={faTag} /> Promociones

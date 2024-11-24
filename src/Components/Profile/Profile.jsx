@@ -4,6 +4,7 @@ import './Profile.css'
 import { Link as Anchor } from 'react-router-dom';
 import baseURL from '../url';
 import ShareWeb from '../ShareWeb/ShareWeb'
+import NewReservation from '../NewReserva/NewReserva';
 export default function Profile() {
     const [tienda, setTienda] = useState([]);
     useEffect(() => {
@@ -41,7 +42,7 @@ export default function Profile() {
                     <Anchor to={tienda.facebook} target="_blank"><i className='fa fa-facebook'></i></Anchor>
                 </div>
             </div>
-
+            <NewReservation />
             <ShareWeb />
         </div>
     )

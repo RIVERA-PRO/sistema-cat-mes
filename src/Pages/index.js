@@ -9,7 +9,7 @@ import Main from "./Main/Main";
 import Categorias from "./Categorias/Categorias";
 import Codigos from "./Codigos/Codigos";
 import PageDetail from '../Pages/PageDetail/PageDetail';
-import PageProductos from "./PageProductos/PageProductos";
+import Reservas from "./Reservas/Reservas";
 import Pedidos from "./Pedidos/Pedidos";
 import Tienda from "./Tienda/Tienda";
 import MetodosDePago from "./MetodosDePago/MetodosDePago";
@@ -81,6 +81,10 @@ export const router = createBrowserRouter([
             {
                 path: `/dashboard/mesas`,
                 element: <Mesas />,
+            },
+            {
+                path: `/dashboard/reservas`,
+                element: <Reservas />,
             },
         ],
     },

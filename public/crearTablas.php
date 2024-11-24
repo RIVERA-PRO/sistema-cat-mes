@@ -141,6 +141,16 @@ crearTablaSiNoExiste($conexion, 'subcategorias', $consultaSubCategorias);
     )";
     crearTablaSiNoExiste($conexion, 'mesas', $consultaMesas);
 
+     // Crear tabla 'reservas' si no existe
+     $consultaRservas = "CREATE TABLE IF NOT EXISTS `reservas` (
+        idReserva INT(11) AUTO_INCREMENT PRIMARY KEY,
+        nombre VARCHAR(100) NOT NULL,
+        cantidad VARCHAR(100) NOT NULL,
+        estado VARCHAR(50) NOT NULL,
+        fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )";
+        crearTablaSiNoExiste($conexion, 'reservas', $consultaRservas);
+
     // Crear tabla 'usuarios' si no existe
     $consultaUsuarios = "CREATE TABLE IF NOT EXISTS `usuarios` (
         idUsuario INT(11) AUTO_INCREMENT PRIMARY KEY,

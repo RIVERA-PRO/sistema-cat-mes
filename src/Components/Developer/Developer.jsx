@@ -6,8 +6,7 @@ export default function Developer() {
 
     return (
         <p className='Developer'>
-            © Copyright 2024<Anchor to={`https://www.stechdev.com`} > www.stechdev.com
-            </Anchor>
+            © Copyright 2024
         </p>
     );
 }
